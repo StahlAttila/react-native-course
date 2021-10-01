@@ -1,43 +1,28 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, FlatList } from "react-native";
-import MealItem from "../components/MealItem";
-import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealList from "../components/MealList";
+import { CATEGORIES } from "../data/dummy-data";
+import { useSelector } from "react-redux";
+import { StyleSheet, View } from "react-native";
+import DefaultText from "../components/DefaultText";
 
 const CategoryMealsScreen = (props) => {
-  const renderMealItem = (itemData) => {
-    return (
-      <MealItem
-        title={itemData.item.title}
-        duration={itemData.item.duration}
-        complexity={itemData.item.complexity}
-        affordability={itemData.item.affordability}
-        image={itemData.item.imageUrl}
-        onSelectMeal={() => {props.navigation.navigate({
-          routeName: "MealDetail",
-          params: {
-            mealId: itemData.item.id,
-          },
-        });}}
-      />
-    );
-  };
-
   const categoryId = props.navigation.getParam("categoryId");
 
-  const displayedMeals = MEALS.filter(
+  const availableMeals = useSelector((state) => state.meals.filteredMeals);
+
+  const displayedMeals = availableMeals.filter(
     (meal) => meal.categoryIds.indexOf(categoryId) >= 0
   );
 
-  return (
-    <View style={styles.screen}>
-      <FlatList
-        data={displayedMeals}
-        keyExtractor={(item, index) => item.id}
-        renderItem={renderMealItem}
-        style={{ width: "95%" }}
-      />
-    </View>
-  );
+  if (displayedMeals.length === 0) {
+    return (
+      <View style={styles.textContainer}>
+        <DefaultText>No meals found, check your filters!</DefaultText>
+      </View>
+    );
+  }
+
+  return <MealList listData={displayedMeals} navigation={props.navigation} />;
 };
 
 //xxx.navigationOptions could be a object for static data or a function for dynamic data
@@ -51,11 +36,11 @@ CategoryMealsScreen.navigationOptions = (navigationData) => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  textContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-  },
+    alignItems: "center"
+  }
 });
 
 export default CategoryMealsScreen;
