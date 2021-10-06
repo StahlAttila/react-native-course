@@ -1,12 +1,29 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Button } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Button,
+  Platform,
+  TouchableNativeFeedback,
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
 
 const ProductItem = (props) => {
+  let TouchableComponent = TouchableOpacity;
+
+  if (Platform.OS === "android" && Platform.Version >= 21) {
+    TouchableComponent = TouchableNativeFeedback;
+  }
+
   return (
     <View style={styles.product}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: props.image }} />
+        <TouchableComponent onPress={props.onViewDetail} useForeground>
+          <Image style={styles.image} source={{ uri: props.image }} />
+        </TouchableComponent>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{props.title}</Text>
@@ -45,7 +62,7 @@ const styles = StyleSheet.create({
     height: "60%",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   image: {
     width: "100%",
