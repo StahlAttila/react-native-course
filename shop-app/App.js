@@ -3,20 +3,24 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
+//only for debugging purposes, remove before deploy
+import { composeWithDevTools } from "redux-devtools-extension";
 
-import productReducers from "./store/reducers/productReducers";
+import productReducer from "./store/reducers/productReducer";
+import cartReducer from "./store/reducers/cartReducer";
 import ShopNavigator from "./navigation/ShopNavigator";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 
 const rootReducer = combineReducers({
-  products: productReducers,
+  products: productReducer,
+  cart: cartReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, composeWithDevTools());
 
 const fetchFonts = () => {
-  Font.loadAsync({
+  return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
