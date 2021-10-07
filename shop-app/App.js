@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 //only for debugging purposes, remove before deploy
-import { composeWithDevTools } from "redux-devtools-extension";
+//import { composeWithDevTools } from "redux-devtools-extension";
 
 import productReducer from "./store/reducers/productReducer";
 import cartReducer from "./store/reducers/cartReducer";
@@ -17,7 +17,8 @@ const rootReducer = combineReducers({
   cart: cartReducer
 });
 
-const store = createStore(rootReducer, composeWithDevTools());
+//add composeWithDevTools() as a second parameter for debugging
+const store = createStore(rootReducer);
 
 const fetchFonts = () => {
   return Font.loadAsync({
